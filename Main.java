@@ -44,6 +44,7 @@ public class Main {
             }
             novaFormacao = Arrays.copyOf(tempFormacao, n); // Atualizar novaFormacao
         }
-        return rodadas;
+        return rodadas; 
+        
     }
 }
