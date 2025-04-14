@@ -1,53 +1,68 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.*;
 
 public class DancaDosRobos {
 
-    public static int[] aplicarReceita(int[] formacao, int[] receita) {
-        int[] novaFormacao = new int[formacao.length];
-        for (int i = 0; i < formacao.length; i++) {
-            novaFormacao[i] = formacao[receita[i]];
-        }
-        return novaFormacao;
+    public static long mmc(long a, long b) {
+        return a / mdc(a, b) * b;
     }
 
-    public static int contarRodadasAteRepeticao(int[] receita) {
+    public static long mdc(long a, long b) {
+        while (b != 0) {
+            long temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    public static long mmcMultiplo(List<Long> numeros) {
+        long resultado = 1;
+        for (long num : numeros) {
+            resultado = mmc(resultado, num);
+        }
+        return resultado;
+    }
+
+    public static long contarRodadasAteRepeticao(int[] receita) {
         int n = receita.length;
-        System.out.println("receita length:"+n);
-        int[] formacaoInicial = new int[n];
+        boolean[] visitados = new boolean[n];
+        List<Long> tamanhosCiclos = new ArrayList<>();
+
+        // Encontra todos os ciclos na permutação
         for (int i = 0; i < n; i++) {
-            formacaoInicial[i] = i;
+            if (!visitados[i]) {
+                int tamanhoCiclo = 0;
+                int atual = i;
+
+                while (!visitados[atual]) {
+                    visitados[atual] = true;
+                    atual = receita[atual];
+                    tamanhoCiclo++;
+                }
+
+                if (tamanhoCiclo > 0) {
+                    tamanhosCiclos.add((long) tamanhoCiclo);
+                }
+            }
         }
-        System.out.println("formacaoInicial :"+Arrays.toString(formacaoInicial));
-    
-        int[] formacaoAtual = Arrays.copyOf(formacaoInicial, n);
-        int rodadas = 0;
-    
-        while (!Arrays.equals(formacaoAtual, formacaoInicial) || rodadas == 0) {
-            formacaoAtual = aplicarReceita(formacaoAtual, receita);
-            rodadas++;
-            System.out.println("formacaoAtual :"+Arrays.toString(formacaoAtual));
-            System.out.println("rodadas :"+rodadas);
-        }
-    
-        return rodadas;
+
+
+        return mmcMultiplo(tamanhosCiclos);
     }
-    
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        String caminhoArquivo = "caso_102.txt";
 
-        System.out.print("Digite o número de robôs: ");
-        int n = scanner.nextInt();
+        BufferedReader arquivo = new BufferedReader(new java.io.FileReader(caminhoArquivo));
+        int n = Integer.parseInt(arquivo.readLine());
+        int[] receita = Arrays.stream(arquivo.readLine().split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+        arquivo.close();
 
-        int[] receita = new int[n];
-        System.out.println("Digite a receita (sequência de " + n + " números de 0 a " + (n - 1) + "):");
-        for (int i = 0; i < n; i++) {
-            receita[i] = scanner.nextInt();
-        }
-
-        int rodadas = contarRodadasAteRepeticao(receita);
+        long rodadas = contarRodadasAteRepeticao(receita);
         System.out.println("A dança repete após " + rodadas + " rodadas.");
     }
-    
 }
