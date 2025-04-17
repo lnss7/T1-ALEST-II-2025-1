@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class DancaDosRobos {
-
     public static long mmc(long a, long b) {
         return a / mdc(a, b) * b;
     }
@@ -25,7 +24,7 @@ public class DancaDosRobos {
         return resultado;
     }
 
-    public static long contarRodadasAteRepeticao(int[] receita) {
+    public static long contarRodadas(int[] receita) {
         int n = receita.length;
         boolean[] visitados = new boolean[n];
         List<Long> tamanhosCiclos = new ArrayList<>();
@@ -48,5 +47,17 @@ public class DancaDosRobos {
         }
 
         return mmcMultiplo(tamanhosCiclos);
+    }
+
+    public static void main(String[] args) throws IOException {
+        String caminhoArquivo = "caso_192.txt";
+        BufferedReader arquivo = new BufferedReader(new java.io.FileReader(caminhoArquivo));
+        int[] receita = Arrays.stream(arquivo.readLine().split(" "))
+                              .mapToInt(Integer::parseInt)
+                              .toArray();
+        arquivo.close();
+        
+        long rodadas = contarRodadas(receita);
+        System.out.println("A dança repete após " + rodadas + " rodadas.");
     }
 }
