@@ -30,7 +30,6 @@ public class DancaDosRobos {
         boolean[] visitados = new boolean[n];
         List<Long> tamanhosCiclos = new ArrayList<>();
 
-        // Encontra todos os ciclos na permutação
         for (int i = 0; i < n; i++) {
             if (!visitados[i]) {
                 int tamanhoCiclo = 0;
@@ -48,21 +47,6 @@ public class DancaDosRobos {
             }
         }
 
-
         return mmcMultiplo(tamanhosCiclos);
-    }
-
-    public static void main(String[] args) throws IOException {
-        String caminhoArquivo = "caso_102.txt";
-
-        BufferedReader arquivo = new BufferedReader(new java.io.FileReader(caminhoArquivo));
-        int n = Integer.parseInt(arquivo.readLine());
-        int[] receita = Arrays.stream(arquivo.readLine().split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-        arquivo.close();
-
-        long rodadas = contarRodadasAteRepeticao(receita);
-        System.out.println("A dança repete após " + rodadas + " rodadas.");
     }
 }
